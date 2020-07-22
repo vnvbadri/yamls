@@ -24,7 +24,7 @@ spec:
   entryPoints:
     - web
   routes:
-  - match: Host(`ingress.sambaschool.tk`) && Path(`/crop`)
+  - match: Host(`ingress.sambaschool.tk`) && PathPrefix(`/crop`)
     kind: Rule
     services: 
     - name: crop-management
