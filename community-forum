@@ -24,7 +24,7 @@ spec:
   entryPoints:
     - web
   routes:
-  - match: Host(`ingress.sambaschool.tk`) && Path(`/community`)
+  - match: Host(`ingress.sambaschool.tk`) && PathPrefix(`/community`)
     kind: Rule
     services: 
     - name: community-forum
