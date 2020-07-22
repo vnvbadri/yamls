@@ -4,6 +4,7 @@ metadata:
     name: crop-management
     namespace: kisanvedika
     annotations:
+       kubernetes.io/ingress.class: "nginx"    
 #      traefik.backend.circuitbreaker: "NetworkErrorRatio() > 0.5"
 spec:
   type: LoadBalancer
