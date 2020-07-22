@@ -10,6 +10,7 @@ spec:
   ports:
   - name: http
     targetPort: 8081
+    protocol: TCP
     port: 80
   selector:
     app: crop-management
