@@ -13,3 +13,7 @@ spec:
     port: 8080
   selector:
     app: crop-management
+status:
+  loadBalancer:
+    ingress:
+    - ip: 52.146.61.254
