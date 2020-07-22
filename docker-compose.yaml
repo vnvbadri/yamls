@@ -1,0 +1,64 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:9.5
+    restart: unless-stopped
+#    volumes:
+#      - /opt/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+  redis:
+    image: redis:latest
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+#    volumes:
+#      - /opt/redis:/data
+  scalelite-api:
+    image: blindsidenetwks/scalelite:v1.0.4-api
+    container_name: scalelite-api
+    restart: unless-stopped
+    env_file: /etc/default/scalelite
+#    volumes:
+#      - /mnt/recording:/var/bigbluebutton
+    depends_on:
+      - db
+      - redis
+  scalelite-nginx:
+    image: blindsidenetwks/scalelite:v1.0.4-nginx
+    restart: unless-stopped
+    container_name: scalelite-nginx
+    env_file: /etc/default/scalelite
+    depends_on:
+      - scalelite-api
+      - db
+      - redis
+ #   volumes:
+ #     - /mnt/recording/published:/var/bigbluebutton/published
+ #     - /etc/ssl:/etc/nginx/ssl:ro
+ #     - /opt/greenlight/greenlight.nginx:/etc/bigbluebutton/nginx/greenlight.nginx
+    ports:
+      - "80:80"
+      - "443:443"
+  scalelite-poller:
+    image: blindsidenetwks/scalelite:v1.0.4-poller
+    container_name: scalelite-poller
+    restart: unless-stopped
+    env_file: /etc/default/scalelite
+    depends_on:
+      - scalelite-api
+      - db
+      - redis
+  scalelite-recording-importer:
+    image: blindsidenetwks/scalelite:v1.0.4-recording-importer
+    container_name: scalelite-recording-importer
+    restart: unless-stopped
+    env_file: /etc/default/scalelite
+    volumes:
+      - /mnt/recording:/var/bigbluebutton
+    depends_on:
+      - scalelite-api
+      - db
+      - redis
