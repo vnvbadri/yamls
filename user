@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: user-management
+    namespace: kisanvedika
+    annotations:
+      traefik.backend.circuitbreaker: "NetworkErrorRatio() > 0.5"
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    targetPort: 80
+    port: 80
+  selector:
+    app: user-management
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: user-management
+  namespace: kisanvedika
+  annotations:
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: Host(`user.bighaat.cf`) && PathPrefix(`/user`)
+    kind: Rule
+    services:
+    - name: user-management
+      port: 80
